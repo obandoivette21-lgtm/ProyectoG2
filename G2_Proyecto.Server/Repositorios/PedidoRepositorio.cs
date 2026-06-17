@@ -12,7 +12,22 @@ namespace G2_Proyecto.Server.Repositorios
         private readonly ContextoBaseDatos _context;
         public PedidoRepositorio(ContextoBaseDatos context) { _context = context; }
         
-        public async Task<List<Pedido>> ObtenerTodosAsync() => await _context.Pedidos.ToListAsync();
+        public async Task<List<Pedido>> ObtenerTodosAsync() => 
+            await _context.Pedidos
+                .Include(p => p.Cliente)
+                .Include(p => p.Detalles)
+                    .ThenInclude(d => d.Producto)
+                .ToListAsync();
+
+        public async Task<Pedido?> ObtenerPorIdAsync(int id) => 
+            await _context.Pedidos
+                .Include(p => p.Cliente)
+                .Include(p => p.Detalles)
+                    .ThenInclude(d => d.Producto)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
         public async Task AgregarAsync(Pedido pedido) { _context.Pedidos.Add(pedido); await _context.SaveChangesAsync(); }
+        public async Task ActualizarAsync(Pedido pedido) { _context.Pedidos.Update(pedido); await _context.SaveChangesAsync(); }
+        public async Task EliminarAsync(Pedido pedido) { _context.Pedidos.Remove(pedido); await _context.SaveChangesAsync(); }
     }
 }
