@@ -1,0 +1,29 @@
+<div class="menu-container container">
+  <h2 class="section-title">Nuestra Carta</h2>
+  <p class="section-subtitle">Descubre la variedad de deliciosos platos que tenemos preparados para ti.</p>
+
+  <div *ngIf="cargando" class="text-center">
+    <p>Cargando menú delicioso...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!cargando && !error" class="products-grid">
+    <div *ngFor="let prod of productos" class="product-card card">
+      <div class="product-image-container">
+        <span class="product-badge">Especialidad</span>
+        <div class="product-placeholder-img">🍳</div>
+      </div>
+      <div class="product-details">
+        <h3>{{ prod.nombre }}</h3>
+        <p class="product-desc">{{ prod.descripcion }}</p>
+        <div class="product-footer">
+          <span class="product-price">${{ prod.precio | number:'1.2-2' }}</span>
+          <button class="btn btn-sm">Ordenar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

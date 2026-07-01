@@ -1,0 +1,35 @@
+<div class="reservas-container container">
+  <div class="auth-card card">
+    <h2>Reserva tu Mesa</h2>
+    <p class="auth-subtitle">Disfruta de una experiencia gastronómica única sin esperas.</p>
+
+    <div *ngIf="!estaAutenticado" class="text-center" style="margin-top: 1.5rem;">
+      <p style="margin-bottom: 1rem; color: var(--text-muted);">Debes iniciar sesión con tu cuenta de cliente para realizar una reserva.</p>
+      <a routerLink="/login" class="btn">Iniciar Sesión</a>
+    </div>
+
+    <div *ngIf="estaAutenticado">
+      <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <div *ngIf="exito" class="alert alert-success">
+        {{ exito }}
+      </div>
+
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="fechaReserva">Fecha y Hora</label>
+          <input type="datetime-local" id="fechaReserva" name="fechaReserva" [(ngModel)]="fechaReserva" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="cantidadPersonas">Número de Personas</label>
+          <input type="number" id="cantidadPersonas" name="cantidadPersonas" [(ngModel)]="cantidadPersonas" class="form-control" required min="1" max="20">
+        </div>
+
+        <button type="submit" class="btn btn-block">Confirmar Reserva</button>
+      </form>
+    </div>
+  </div>
+</div>

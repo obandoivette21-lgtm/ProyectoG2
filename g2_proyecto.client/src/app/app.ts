@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { ClienteService } from './servicios/cliente.service';
 
 @Component({
   selector: 'app-root',
@@ -7,25 +7,10 @@ import { Component, signal } from '@angular/core';
   standalone: false,
   styleUrl: './app.css'
 })
-export class App implements OnInit {
-  public forecasts: WeatherForecast[] = [];
+export class App {
+  constructor(public clienteService: ClienteService) {}
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    this.getForecasts();
+  logout(): void {
+    this.clienteService.logout();
   }
-
-  getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
-        this.forecasts = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-  protected readonly title = signal('g2_proyecto.client');
 }

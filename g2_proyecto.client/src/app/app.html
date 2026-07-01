@@ -1,24 +1,45 @@
-﻿<h1 id="tableLabel">Weather forecast</h1>
+<header class="main-header">
+  <div class="header-container">
+    <a routerLink="/" class="logo-link">
+      <span class="logo-icon">🍽️</span>
+      <span class="logo-text">Sabor Express</span>
+    </a>
+    <nav class="main-nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+      <a routerLink="/menu" routerLinkActive="active">Menú</a>
+      <a routerLink="/reservas" routerLinkActive="active">Reservar</a>
+      <ng-container *ngIf="clienteService.usuarioActual() as usuario; else authButtons">
+        <span class="user-greeting">Hola, <strong>{{ usuario.nombre }}</strong></span>
+        <button (click)="logout()" class="btn btn-sm btn-logout">Salir</button>
+      </ng-container>
+      <ng-template #authButtons>
+        <a routerLink="/login" class="btn btn-sm">Iniciar Sesión</a>
+      </ng-template>
+    </nav>
+  </div>
+</header>
 
-<p>This component demonstrates fetching data from the server.</p>
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
 
-<p *ngIf="!forecasts"><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationangular">https://aka.ms/jspsintegrationangular</a> for more details.</em></p>
-
-<table *ngIf="forecasts">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let forecast of forecasts">
-            <td>{{ forecast.date }}</td>
-            <td>{{ forecast.temperatureC }}</td>
-            <td>{{ forecast.temperatureF }}</td>
-            <td>{{ forecast.summary }}</td>
-        </tr>
-    </tbody>
-</table>
+<footer class="main-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4>Sabor Express</h4>
+      <p>Deliciosa comida rápida y fresca a tu alcance.</p>
+    </div>
+    <div>
+      <h4>Horario</h4>
+      <p>Lunes a Domingo: 11:00 AM - 10:00 PM</p>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <p>info@saborexpress.com</p>
+      <p>+1 (555) 0199-281</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Sabor Express. Todos los derechos reservados.</p>
+  </div>
+</footer>
