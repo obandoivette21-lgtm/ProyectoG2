@@ -1,0 +1,15 @@
+.vs/
+.vscode/
+bin/
+obj/
+node_modules/
+.angular/
+dist/
+*.user
+*.suo
+*.useroscs
+*.userprefs
+*.db
+*.db-shm
+*.db-wal
+ProjectEvaluation/
