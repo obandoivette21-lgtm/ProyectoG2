@@ -1,0 +1,129 @@
+<div class="container" style="max-width: 1100px;">
+  <h2 class="section-title">Panel de Administración</h2>
+  <p class="section-subtitle">Gestión integral de la carta, los pedidos de los clientes y las reservas del local.</p>
+
+  <div *ngIf="mensajeExito" class="alert alert-success">{{ mensajeExito }}</div>
+  <div *ngIf="mensajeError" class="alert alert-danger">{{ mensajeError }}</div>
+
+  <div style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem;">
+    <button class="btn" [ngClass]="{'btn-secondary': tabActiva !== 'productos'}" (click)="setTab('productos')">Catálogo de Productos</button>
+    <button class="btn" [ngClass]="{'btn-secondary': tabActiva !== 'pedidos'}" (click)="setTab('pedidos')">Gestión de Pedidos ({{ pedidos.length }})</button>
+    <button class="btn" [ngClass]="{'btn-secondary': tabActiva !== 'reservas'}" (click)="setTab('reservas')">Gestión de Reservas ({{ reservas.length }})</button>
+  </div>
+
+  <div *ngIf="tabActiva === 'productos'">
+    <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;" class="admin-grid">
+      <div class="card">
+        <h3>{{ editandoProducto ? 'Editar Producto' : 'Agregar Nuevo Producto' }}</h3>
+        <form (ngSubmit)="guardarProducto()">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" [(ngModel)]="productoForm.nombre" class="form-control" required placeholder="Ej: Pizza Hawayana">
+          </div>
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion" [(ngModel)]="productoForm.descripcion" class="form-control" rows="3" placeholder="Ingredientes y detalles"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="precio">Precio ($)</label>
+            <input type="number" id="precio" name="precio" [(ngModel)]="productoForm.precio" class="form-control" step="0.5" min="0.1" required>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="submit" class="btn">{{ editandoProducto ? 'Actualizar' : 'Crear Producto' }}</button>
+            <button type="button" *ngIf="editandoProducto" (click)="resetProductoForm()" class="btn btn-secondary">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Lista de Productos del Menú</h3>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+            <thead>
+              <tr style="background-color: var(--bg-color); text-align: left;">
+                <th style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">ID</th>
+                <th style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Nombre</th>
+                <th style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Precio</th>
+                <th style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of productos" style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem;">#{{ p.id }}</td>
+                <td style="padding: 0.75rem;">
+                  <strong>{{ p.nombre }}</strong>
+                  <span style="display: block; font-size: 0.85rem; color: var(--text-muted);">{{ p.descripcion }}</span>
+                </td>
+                <td style="padding: 0.75rem;">${{ p.precio | number:'1.2-2' }}</td>
+                <td style="padding: 0.75rem;">
+                  <button class="btn btn-sm" (click)="editarProducto(p)" style="margin-right: 0.4rem;">Editar</button>
+                  <button class="btn btn-sm btn-danger" (click)="eliminarProducto(p.id!)">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="tabActiva === 'pedidos'">
+    <div class="card">
+      <h3>Pedidos Recibidos</h3>
+      <div *ngIf="pedidos.length === 0" class="text-center" style="padding: 2rem; color: var(--text-muted);">No hay pedidos en el sistema.</div>
+      <div *ngFor="let ped of pedidos" style="border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; margin-top: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+          <div>
+            <strong>Pedido #{{ ped.id }}</strong> - Cliente: <em>{{ ped.cliente?.nombre || ('ID ' + ped.clienteId) }}</em>
+            <span style="display: block; font-size: 0.85rem; color: var(--text-muted);">Dirección: {{ ped.direccionEntrega }} | Fecha: {{ ped.fechaPedido | date:'short' }}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span>Estado:</span>
+            <select [ngModel]="ped.estado" (ngModelChange)="cambiarEstadoPedido(ped, $event)" class="form-control" style="width: auto; display: inline-block;">
+              <option value="Pendiente">Pendiente</option>
+              <option value="En preparación">En preparación</option>
+              <option value="Listo para entrega">Listo para entrega</option>
+              <option value="Entregado">Entregado</option>
+              <option value="Cancelado">Cancelado</option>
+            </select>
+          </div>
+        </div>
+        <div style="font-size: 0.9rem; background-color: var(--bg-color); padding: 0.5rem 0.75rem; border-radius: 4px;">
+          <div *ngFor="let item of ped.detalles">
+            {{ item.cantidad }}x {{ item.producto?.nombre || 'Producto' }} (${{ item.precioUnitario | number:'1.2-2' }} c/u)
+          </div>
+          <div style="margin-top: 0.4rem; font-weight: bold; color: var(--primary-color);">Total: ${{ ped.total | number:'1.2-2' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="tabActiva === 'reservas'">
+    <div class="card">
+      <h3>Reservas de Mesas</h3>
+      <div *ngIf="reservas.length === 0" class="text-center" style="padding: 2rem; color: var(--text-muted);">No hay reservas agendadas.</div>
+      <table *ngIf="reservas.length > 0" style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+        <thead>
+          <tr style="background-color: var(--bg-color); text-align: left;">
+            <th style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">ID</th>
+            <th style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Cliente</th>
+            <th style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Fecha y Hora</th>
+            <th style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Personas</th>
+            <th style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let res of reservas" style="border-bottom: 1px solid var(--border-color);">
+            <td style="padding: 0.75rem;">#{{ res.id }}</td>
+            <td style="padding: 0.75rem;">{{ res.cliente?.nombre || ('Cliente #' + res.clienteId) }}</td>
+            <td style="padding: 0.75rem;">{{ res.fechaReserva | date:'medium' }}</td>
+            <td style="padding: 0.75rem;">{{ res.cantidadPersonas }} persona(s)</td>
+            <td style="padding: 0.75rem;">
+              <button class="btn btn-sm btn-danger" (click)="eliminarReserva(res.id!)">Cancelar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

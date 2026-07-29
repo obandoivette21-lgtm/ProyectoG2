@@ -17,6 +17,16 @@ namespace G2_Proyecto.Server.Repositorios
                 .Include(p => p.Cliente)
                 .Include(p => p.Detalles)
                     .ThenInclude(d => d.Producto)
+                .OrderByDescending(p => p.FechaPedido)
+                .ToListAsync();
+
+        public async Task<List<Pedido>> ObtenerPorClienteIdAsync(int clienteId) =>
+            await _context.Pedidos
+                .Where(p => p.ClienteId == clienteId)
+                .Include(p => p.Cliente)
+                .Include(p => p.Detalles)
+                    .ThenInclude(d => d.Producto)
+                .OrderByDescending(p => p.FechaPedido)
                 .ToListAsync();
 
         public async Task<Pedido?> ObtenerPorIdAsync(int id) => 

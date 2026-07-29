@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace G2_Proyecto.Server.Controladores
 {
-    // Controlador REST para manejar las peticiones HTTP de los clientes
     [ApiController]
     [Route("api/[controller]")]
     public class ClienteControlador : ControllerBase

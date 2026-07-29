@@ -2,6 +2,10 @@
   <h2 class="section-title">Nuestra Carta</h2>
   <p class="section-subtitle">Descubre la variedad de deliciosos platos que tenemos preparados para ti.</p>
 
+  <div class="form-group" style="max-width: 500px; margin: 0 auto 2rem auto;">
+    <input type="text" [(ngModel)]="busqueda" (ngModelChange)="filtrarProductos()" class="form-control" placeholder="🔍 Buscar plato por nombre o ingrediente..." style="border-radius: 25px; padding: 0.75rem 1.25rem;">
+  </div>
+
   <div *ngIf="cargando" class="text-center">
     <p>Cargando menú delicioso...</p>
   </div>
@@ -11,9 +15,8 @@
   </div>
 
   <div *ngIf="!cargando && !error" class="menu-layout">
-    <!-- Listado de platos -->
     <div class="products-grid">
-      <div *ngFor="let prod of productos" class="product-card card">
+      <div *ngFor="let prod of productosFiltrados" class="product-card card">
         <div class="product-image-container">
           <span class="product-badge">Especialidad</span>
           <div class="product-placeholder-img">🍳</div>
@@ -27,9 +30,11 @@
           </div>
         </div>
       </div>
+      <div *ngIf="productosFiltrados.length === 0" class="text-center" style="grid-column: 1 / -1; padding: 2rem; color: var(--text-muted);">
+        No se encontraron platos que coincidan con "{{ busqueda }}".
+      </div>
     </div>
 
-    <!-- Carrito de Compras -->
     <div class="cart-sidebar card">
       <h3>Tu Pedido</h3>
       
@@ -50,10 +55,13 @@
           <div *ngFor="let item of carrito; let i = index" class="cart-item">
             <div class="cart-item-info">
               <span class="cart-item-name">{{ item.producto.nombre }}</span>
-              <span class="cart-item-meta">{{ item.cantidad }}x - ${{ item.producto.precio | number:'1.2-2' }}</span>
+              <span class="cart-item-meta">${{ item.producto.precio | number:'1.2-2' }} c/u</span>
             </div>
-            <div class="cart-item-actions">
-              <button class="btn btn-sm btn-danger" (click)="eliminarDelCarrito(i)">✕</button>
+            <div class="cart-item-actions" style="display: flex; align-items: center; gap: 0.4rem;">
+              <button class="btn btn-sm" (click)="modificarCantidad(i, -1)" style="padding: 0.2rem 0.5rem;">-</button>
+              <span style="font-weight: bold; min-width: 1.2rem; text-align: center;">{{ item.cantidad }}</span>
+              <button class="btn btn-sm" (click)="modificarCantidad(i, 1)" style="padding: 0.2rem 0.5rem;">+</button>
+              <button class="btn btn-sm btn-danger" (click)="eliminarDelCarrito(i)" style="margin-left: 0.25rem;">✕</button>
             </div>
           </div>
         </div>
@@ -63,7 +71,6 @@
           <strong>${{ obtenerTotal() | number:'1.2-2' }}</strong>
         </div>
 
-        <!-- Formulario de pedido -->
         <div class="cart-checkout-form" style="margin-top: 1.5rem;">
           <div *ngIf="!clienteService.estaAutenticado()" class="text-center">
             <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Inicia sesión para finalizar tu pedido.</p>
@@ -84,4 +91,3 @@
     </div>
   </div>
 </div>
-

@@ -9,8 +9,11 @@ namespace G2_Proyecto.Server.Servicios
     {
         private readonly ReservaRepositorio _repositorio;
         public ReservaServicio(ReservaRepositorio repositorio) { _repositorio = repositorio; }
+        
         public async Task<List<Reserva>> ObtenerReservasAsync() => await _repositorio.ObtenerTodasAsync();
         
+        public async Task<List<Reserva>> ObtenerReservasPorClienteAsync(int clienteId) => await _repositorio.ObtenerPorClienteIdAsync(clienteId);
+
         public async Task<Reserva?> ObtenerReservaPorIdAsync(int id) => await _repositorio.ObtenerPorIdAsync(id);
 
         public async Task CrearReservaAsync(Reserva reserva)

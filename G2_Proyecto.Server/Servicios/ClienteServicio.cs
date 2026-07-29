@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace G2_Proyecto.Server.Servicios
 {
-    // Contiene la lógica de negocio relacionada con los Clientes
     public class ClienteServicio
     {
         private readonly ClienteRepositorio _repositorio;

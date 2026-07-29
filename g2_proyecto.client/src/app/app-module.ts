@@ -11,6 +11,8 @@ import { MenuComponent } from './componentes/menu/menu.component';
 import { LoginComponent } from './componentes/login/login.component';
 import { RegistroComponent } from './componentes/registro/registro.component';
 import { ReservasComponent } from './componentes/reservas/reservas.component';
+import { MisPedidosComponent } from './componentes/mis-pedidos/mis-pedidos.component';
+import { AdminComponent } from './componentes/admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { ReservasComponent } from './componentes/reservas/reservas.component';
     MenuComponent,
     LoginComponent,
     RegistroComponent,
-    ReservasComponent
+    ReservasComponent,
+    MisPedidosComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,

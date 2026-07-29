@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace G2_Proyecto.Server.Repositorios
 {
-    // Maneja las operaciones de base de datos para Clientes
     public class ClienteRepositorio
     {
         private readonly ContextoBaseDatos _context;

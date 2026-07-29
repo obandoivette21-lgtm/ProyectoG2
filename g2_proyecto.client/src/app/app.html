@@ -8,6 +8,10 @@
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
       <a routerLink="/menu" routerLinkActive="active">Menú</a>
       <a routerLink="/reservas" routerLinkActive="active">Reservar</a>
+      <ng-container *ngIf="clienteService.estaAutenticado()">
+        <a routerLink="/pedidos" routerLinkActive="active">Mis Pedidos</a>
+      </ng-container>
+      <a routerLink="/admin" routerLinkActive="active">Administración</a>
       <ng-container *ngIf="clienteService.usuarioActual() as usuario; else authButtons">
         <span class="user-greeting">Hola, <strong>{{ usuario.nombre }}</strong></span>
         <button (click)="logout()" class="btn btn-sm btn-logout">Salir</button>

@@ -1,0 +1,58 @@
+<div class="container" style="max-width: 900px; margin: 0 auto;">
+  <h2 class="section-title">Mis Pedidos</h2>
+  <p class="section-subtitle">Consulta el historial y estado de tus pedidos a domicilio.</p>
+
+  <div *ngIf="!clienteService.estaAutenticado()" class="card text-center" style="padding: 2rem;">
+    <p style="margin-bottom: 1rem; color: var(--text-muted);">Debes iniciar sesión para ver tus pedidos.</p>
+    <a routerLink="/login" class="btn">Iniciar Sesión</a>
+  </div>
+
+  <div *ngIf="clienteService.estaAutenticado()">
+    <div *ngIf="cargando" class="text-center">
+      <p>Cargando tus pedidos...</p>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+
+    <div *ngIf="!cargando && !error && pedidos.length === 0" class="card text-center" style="padding: 2.5rem;">
+      <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1rem;">Aún no has realizado ningún pedido.</p>
+      <a routerLink="/menu" class="btn">Ir al Menú</a>
+    </div>
+
+    <div *ngIf="!cargando && pedidos.length > 0" class="orders-list" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <div *ngFor="let p of pedidos" class="card" style="border-left: 4px solid var(--primary-color);">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <strong style="font-size: 1.1rem; color: var(--text-dark);">Pedido #{{ p.id }}</strong>
+            <span style="display: block; font-size: 0.85rem; color: var(--text-muted);">{{ p.fechaPedido | date:'short' }}</span>
+          </div>
+          <div>
+            <span [ngClass]="{
+              'alert-success': p.estado === 'Entregado',
+              'alert-danger': p.estado === 'Cancelado'
+            }" style="padding: 0.3rem 0.75rem; border-radius: 20px; font-weight: bold; font-size: 0.85rem; background-color: var(--border-color); color: var(--text-dark);">
+              {{ p.estado }}
+            </span>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Dirección:</strong> {{ p.direccionEntrega }}</p>
+          <div style="background-color: var(--bg-color); border-radius: 6px; padding: 0.75rem;">
+            <div *ngFor="let d of p.detalles" style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.25rem;">
+              <span>{{ d.cantidad }}x {{ d.producto?.nombre || 'Producto' }}</span>
+              <span>${{ (d.precioUnitario * d.cantidad) | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border-color); padding-top: 0.75rem;">
+          <span style="font-weight: 500;">Total</span>
+          <strong style="font-size: 1.25rem; color: var(--primary-color);">${{ p.total | number:'1.2-2' }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

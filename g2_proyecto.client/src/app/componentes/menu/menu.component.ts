@@ -11,6 +11,8 @@ import { Producto, Pedido, DetallePedido } from '../../modelos/modelos';
 })
 export class MenuComponent implements OnInit {
   productos: Producto[] = [];
+  productosFiltrados: Producto[] = [];
+  busqueda = '';
   cargando = true;
   error = '';
   
@@ -30,6 +32,7 @@ export class MenuComponent implements OnInit {
     this.productoService.obtenerProductos().subscribe({
       next: (data) => {
         this.productos = data;
+        this.productosFiltrados = data;
         this.cargando = false;
       },
       error: (err) => {
@@ -40,6 +43,17 @@ export class MenuComponent implements OnInit {
     });
   }
 
+  filtrarProductos(): void {
+    const q = this.busqueda.toLowerCase().trim();
+    if (!q) {
+      this.productosFiltrados = this.productos;
+    } else {
+      this.productosFiltrados = this.productos.filter(p =>
+        p.nombre.toLowerCase().includes(q) || p.descripcion.toLowerCase().includes(q)
+      );
+    }
+  }
+
   agregarAlCarrito(producto: Producto): void {
     this.pedidoExito = '';
     this.pedidoError = '';
@@ -48,6 +62,16 @@ export class MenuComponent implements OnInit {
       item.cantidad++;
     } else {
       this.carrito.push({ producto, cantidad: 1 });
+    }
+  }
+
+  modificarCantidad(index: number, delta: number): void {
+    const item = this.carrito[index];
+    if (item) {
+      item.cantidad += delta;
+      if (item.cantidad <= 0) {
+        this.carrito.splice(index, 1);
+      }
     }
   }
 
@@ -101,7 +125,7 @@ export class MenuComponent implements OnInit {
 
     this.pedidoService.crearPedido(nuevoPedido).subscribe({
       next: () => {
-        this.pedidoExito = '¡Pedido realizado con éxito!';
+        this.pedidoExito = '¡Pedido realizado con éxito! Puedes darle seguimiento en "Mis Pedidos".';
         this.carrito = [];
         this.direccionEntrega = '';
         this.enviandoPedido = false;
@@ -114,4 +138,3 @@ export class MenuComponent implements OnInit {
     });
   }
 }
-

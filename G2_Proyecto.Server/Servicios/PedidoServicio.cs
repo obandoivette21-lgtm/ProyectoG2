@@ -18,6 +18,8 @@ namespace G2_Proyecto.Server.Servicios
 
         public async Task<List<Pedido>> ObtenerPedidosAsync() => await _repositorio.ObtenerTodosAsync();
 
+        public async Task<List<Pedido>> ObtenerPedidosPorClienteAsync(int clienteId) => await _repositorio.ObtenerPorClienteIdAsync(clienteId);
+
         public async Task<Pedido?> ObtenerPedidoPorIdAsync(int id) => await _repositorio.ObtenerPorIdAsync(id);
 
         public async Task CrearPedidoAsync(Pedido pedido)
@@ -54,7 +56,6 @@ namespace G2_Proyecto.Server.Servicios
                 throw new System.Exception("Pedido no encontrado.");
             }
 
-            // Permitir actualizar el estado y la dirección
             existente.Estado = pedido.Estado;
             existente.DireccionEntrega = pedido.DireccionEntrega;
 

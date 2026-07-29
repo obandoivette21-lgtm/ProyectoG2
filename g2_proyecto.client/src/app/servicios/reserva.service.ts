@@ -18,4 +18,16 @@ export class ReservaService {
   obtenerReservas(): Observable<Reserva[]> {
     return this.http.get<Reserva[]>(this.apiUrl);
   }
+
+  obtenerReservasPorCliente(clienteId: number): Observable<Reserva[]> {
+    return this.http.get<Reserva[]>(`${this.apiUrl}/cliente/${clienteId}`);
+  }
+
+  actualizarReserva(id: number, reserva: Reserva): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, reserva);
+  }
+
+  eliminarReserva(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }

@@ -18,4 +18,16 @@ export class PedidoService {
   obtenerPedidos(): Observable<Pedido[]> {
     return this.http.get<Pedido[]>(this.apiUrl);
   }
+
+  obtenerPedidosPorCliente(clienteId: number): Observable<Pedido[]> {
+    return this.http.get<Pedido[]>(`${this.apiUrl}/cliente/${clienteId}`);
+  }
+
+  actualizarPedido(id: number, pedido: Pedido): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, pedido);
+  }
+
+  eliminarPedido(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }

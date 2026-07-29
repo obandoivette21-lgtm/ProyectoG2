@@ -29,6 +29,9 @@ namespace G2_Proyecto.Server.Controladores
         [HttpGet]
         public async Task<IActionResult> ObtenerReservas() => Ok(await _servicio.ObtenerReservasAsync());
 
+        [HttpGet("cliente/{clienteId}")]
+        public async Task<IActionResult> ObtenerPorCliente(int clienteId) => Ok(await _servicio.ObtenerReservasPorClienteAsync(clienteId));
+
         [HttpGet("{id}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
