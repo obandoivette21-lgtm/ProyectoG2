@@ -22,6 +22,8 @@ export class MenuComponent implements OnInit {
   pedidoError = '';
   enviandoPedido = false;
 
+  categoriaSeleccionada = 'Todos';
+
   constructor(
     private productoService: ProductoService,
     private pedidoService: PedidoService,
@@ -32,7 +34,7 @@ export class MenuComponent implements OnInit {
     this.productoService.obtenerProductos().subscribe({
       next: (data) => {
         this.productos = data;
-        this.productosFiltrados = data;
+        this.filtrarProductos();
         this.cargando = false;
       },
       error: (err) => {
@@ -43,15 +45,46 @@ export class MenuComponent implements OnInit {
     });
   }
 
+  setCategoria(cat: string): void {
+    this.categoriaSeleccionada = cat;
+    this.filtrarProductos();
+  }
+
   filtrarProductos(): void {
     const q = this.busqueda.toLowerCase().trim();
-    if (!q) {
-      this.productosFiltrados = this.productos;
-    } else {
-      this.productosFiltrados = this.productos.filter(p =>
-        p.nombre.toLowerCase().includes(q) || p.descripcion.toLowerCase().includes(q)
-      );
-    }
+    this.productosFiltrados = this.productos.filter(p => {
+      const coincideBusqueda = !q || p.nombre.toLowerCase().includes(q) || p.descripcion.toLowerCase().includes(q);
+      
+      let coincideCategoria = true;
+      if (this.categoriaSeleccionada !== 'Todos') {
+        const nom = p.nombre.toLowerCase();
+        if (this.categoriaSeleccionada === 'Hamburguesas') coincideCategoria = nom.includes('hamburguesa');
+        else if (this.categoriaSeleccionada === 'Pizzas') coincideCategoria = nom.includes('pizza');
+        else if (this.categoriaSeleccionada === 'Pastas') coincideCategoria = nom.includes('pasta') || nom.includes('fettuccine');
+        else if (this.categoriaSeleccionada === 'Postres') coincideCategoria = nom.includes('tarta') || nom.includes('postre') || nom.includes('helado');
+        else if (this.categoriaSeleccionada === 'Bebidas') coincideCategoria = nom.includes('refresco') || nom.includes('limonada') || nom.includes('bebida');
+      }
+
+      return coincideBusqueda && coincideCategoria;
+    });
+  }
+
+  limpiarBusqueda(): void {
+    this.busqueda = '';
+    this.filtrarProductos();
+  }
+
+  obtenerIconoProducto(nombre: string): string {
+    const n = nombre.toLowerCase();
+    if (n.includes('hamburguesa')) return '🍔';
+    if (n.includes('pizza')) return '🍕';
+    if (n.includes('pasta') || n.includes('fettuccine')) return '🍝';
+    if (n.includes('papa')) return '🍟';
+    if (n.includes('tarta') || n.includes('tres leches') || n.includes('postre')) return '🍰';
+    if (n.includes('limonada') || n.includes('refresco') || n.includes('bebida')) return '🥤';
+    if (n.includes('taco')) return '🌮';
+    if (n.includes('ensalada')) return '🥗';
+    return '🍽️';
   }
 
   agregarAlCarrito(producto: Producto): void {

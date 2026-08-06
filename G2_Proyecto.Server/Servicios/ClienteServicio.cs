@@ -16,6 +16,10 @@ namespace G2_Proyecto.Server.Servicios
 
         public async Task RegistrarClienteAsync(Cliente cliente)
         {
+            cliente.Nombre = cliente.Nombre?.Trim() ?? string.Empty;
+            cliente.Correo = cliente.Correo?.Trim().ToLowerInvariant() ?? string.Empty;
+            cliente.Contrasena = cliente.Contrasena?.Trim() ?? string.Empty;
+
             if (string.IsNullOrWhiteSpace(cliente.Nombre) || string.IsNullOrWhiteSpace(cliente.Correo) || string.IsNullOrWhiteSpace(cliente.Contrasena))
             {
                 throw new System.Exception("Todos los campos (Nombre, Correo, Contraseña) son obligatorios.");
@@ -38,11 +42,11 @@ namespace G2_Proyecto.Server.Servicios
                 throw new System.Exception("Cliente no encontrado.");
             }
 
-            existente.Nombre = cliente.Nombre;
-            existente.Correo = cliente.Correo;
+            existente.Nombre = cliente.Nombre?.Trim() ?? string.Empty;
+            existente.Correo = cliente.Correo?.Trim().ToLowerInvariant() ?? string.Empty;
             if (!string.IsNullOrWhiteSpace(cliente.Contrasena))
             {
-                existente.Contrasena = cliente.Contrasena;
+                existente.Contrasena = cliente.Contrasena.Trim();
             }
 
             await _repositorio.ActualizarAsync(existente);
@@ -61,6 +65,9 @@ namespace G2_Proyecto.Server.Servicios
 
         public async Task<Cliente?> IniciarSesionAsync(string correo, string contrasena)
         {
+            correo = correo?.Trim().ToLowerInvariant() ?? string.Empty;
+            contrasena = contrasena?.Trim() ?? string.Empty;
+
             var cliente = await _repositorio.ObtenerPorCorreoAsync(correo);
             if (cliente == null || cliente.Contrasena != contrasena)
             {

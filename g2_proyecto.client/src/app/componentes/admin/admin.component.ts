@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../servicios/producto.service';
 import { PedidoService } from '../../servicios/pedido.service';
 import { ReservaService } from '../../servicios/reserva.service';
-import { Producto, Pedido, Reserva } from '../../modelos/modelos';
+import { ClienteService } from '../../servicios/cliente.service';
+import { Producto, Pedido, Reserva, Cliente } from '../../modelos/modelos';
 
 @Component({
   selector: 'app-admin',
@@ -10,11 +11,12 @@ import { Producto, Pedido, Reserva } from '../../modelos/modelos';
   standalone: false
 })
 export class AdminComponent implements OnInit {
-  tabActiva: 'productos' | 'pedidos' | 'reservas' = 'productos';
+  tabActiva: 'productos' | 'pedidos' | 'reservas' | 'clientes' = 'productos';
   
   productos: Producto[] = [];
   pedidos: Pedido[] = [];
   reservas: Reserva[] = [];
+  clientes: Cliente[] = [];
   
   cargando = false;
   mensajeExito = '';
@@ -32,14 +34,15 @@ export class AdminComponent implements OnInit {
   constructor(
     private productoService: ProductoService,
     private pedidoService: PedidoService,
-    private reservaService: ReservaService
+    private reservaService: ReservaService,
+    private clienteService: ClienteService
   ) {}
 
   ngOnInit(): void {
     this.cargarDatos();
   }
 
-  setTab(tab: 'productos' | 'pedidos' | 'reservas'): void {
+  setTab(tab: 'productos' | 'pedidos' | 'reservas' | 'clientes'): void {
     this.tabActiva = tab;
     this.limpiarMensajes();
   }
@@ -66,6 +69,11 @@ export class AdminComponent implements OnInit {
 
     this.reservaService.obtenerReservas().subscribe({
       next: (res) => this.reservas = res,
+      error: (err) => console.error(err)
+    });
+
+    this.clienteService.obtenerTodos().subscribe({
+      next: (cls) => this.clientes = cls,
       error: (err) => console.error(err)
     });
   }

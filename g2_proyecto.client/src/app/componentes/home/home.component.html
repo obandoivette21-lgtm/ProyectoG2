@@ -1,27 +1,62 @@
 <div class="home-container">
   <section class="hero">
     <div class="hero-content">
+      <span class="hero-tagline">🔥 Sabores auténticos & entrega rápida</span>
       <h1>Sabor Express</h1>
-      <p>La combinación perfecta de rapidez, frescura y sabor casero directo a tu mesa.</p>
+      <p>La combinación perfecta de rapidez, ingredientes seleccionados y recetas tradicionales entregadas directamente a tu puerta o preparadas para tu mesa.</p>
       <div class="hero-actions">
-        <a routerLink="/menu" class="btn">Explorar Menú</a>
-        <a routerLink="/reservas" class="btn btn-secondary">Reservar Mesa</a>
+        <a routerLink="/menu" class="btn"> Ver Menú Completo</a>
+        <a routerLink="/reservas" class="btn btn-secondary"> Reservar Mesa</a>
       </div>
+    </div>
+  </section>
+
+  <section class="container" style="margin-bottom: 3rem;">
+    <h2 class="section-title">Especialidades de la Casa</h2>
+    <p class="section-subtitle">Explora nuestras categorías más solicitadas por nuestros clientes.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+      <a routerLink="/menu" class="card category-card" style="text-align: center; text-decoration: none; padding: 2rem 1rem;">
+        <span style="font-size: 3rem; display: block; margin-bottom: 0.5rem;">🍔</span>
+        <h3 style="color: var(--text-dark); font-size: 1.2rem;">Hamburguesas</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">100% carne vacuna jugosa</p>
+      </a>
+
+      <a routerLink="/menu" class="card category-card" style="text-align: center; text-decoration: none; padding: 2rem 1rem;">
+        <span style="font-size: 3rem; display: block; margin-bottom: 0.5rem;">🍕</span>
+        <h3 style="color: var(--text-dark); font-size: 1.2rem;">Pizzas Artesanales</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">Masa madre e ingredientes frescos</p>
+      </a>
+
+      <a routerLink="/menu" class="card category-card" style="text-align: center; text-decoration: none; padding: 2rem 1rem;">
+        <span style="font-size: 3rem; display: block; margin-bottom: 0.5rem;">🍝</span>
+        <h3 style="color: var(--text-dark); font-size: 1.2rem;">Pastas Gourmet</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">Salsas cremosas de la casa</p>
+      </a>
+
+      <a routerLink="/menu" class="card category-card" style="text-align: center; text-decoration: none; padding: 2rem 1rem;">
+        <span style="font-size: 3rem; display: block; margin-bottom: 0.5rem;">🍰</span>
+        <h3 style="color: var(--text-dark); font-size: 1.2rem;">Postres & Bebidas</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">El toque dulce ideal</p>
+      </a>
     </div>
   </section>
 
   <section class="features container">
     <div class="feature-card card">
-      <h3>Ingredientes Frescos</h3>
-      <p>Seleccionamos los mejores ingredientes locales todos los días para garantizar la máxima calidad en cada plato.</p>
+      <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🥗</div>
+      <h3>Ingredientes Seleccionados</h3>
+      <p>Compramos vegetales y carnes de proveedores locales todos los días para garantizar la máxima frescura e higiene.</p>
     </div>
     <div class="feature-card card">
-      <h3>Servicio Express</h3>
-      <p>Preparamos tus pedidos con agilidad para que disfrutes de tu comida favorita sin largas esperas.</p>
+      <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🚀</div>
+      <h3>Envío Express Garatizado</h3>
+      <p>Entregamos tu comida caliente y empaquetada con sumo cuidado en un tiempo promedio menor a 35 minutos.</p>
     </div>
     <div class="feature-card card">
-      <h3>Reservas Fáciles</h3>
-      <p>Asegura tu lugar en nuestro salón de forma rápida con nuestro sistema de reservas en línea.</p>
+      <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">📅</div>
+      <h3>Reserva tu Mesa Online</h3>
+      <p>Evita colas y asegura tu mesa para cenas familiares, celebraciones o reuniones de negocios en 2 clics.</p>
     </div>
   </section>
 </div>

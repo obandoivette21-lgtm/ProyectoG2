@@ -1,13 +1,25 @@
 <div class="menu-container container">
   <h2 class="section-title">Nuestra Carta</h2>
-  <p class="section-subtitle">Descubre la variedad de deliciosos platos que tenemos preparados para ti.</p>
+  <p class="section-subtitle">Descubre la variedad de deliciosos platos preparados al momento por nuestros chefs.</p>
 
-  <div class="form-group" style="max-width: 500px; margin: 0 auto 2rem auto;">
-    <input type="text" [(ngModel)]="busqueda" (ngModelChange)="filtrarProductos()" class="form-control" placeholder="🔍 Buscar plato por nombre o ingrediente..." style="border-radius: 25px; padding: 0.75rem 1.25rem;">
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 1.25rem; margin-bottom: 2.5rem;">
+    <div style="position: relative; width: 100%; max-width: 550px;">
+      <input type="text" [(ngModel)]="busqueda" (ngModelChange)="filtrarProductos()" class="form-control" placeholder=" Buscar por nombre o ingrediente..." style="border-radius: 30px; padding: 0.85rem 3rem 0.85rem 1.5rem; font-size: 1rem; box-shadow: var(--shadow-sm);">
+      <button *ngIf="busqueda" (click)="limpiarBusqueda()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; padding: 0; box-shadow: none;">✕</button>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+      <button class="btn btn-sm" [ngClass]="{'btn-secondary': categoriaSeleccionada !== 'Todos'}" (click)="setCategoria('Todos')"> Todos</button>
+      <button class="btn btn-sm" [ngClass]="{'btn-secondary': categoriaSeleccionada !== 'Hamburguesas'}" (click)="setCategoria('Hamburguesas')">🍔 Hamburguesas</button>
+      <button class="btn btn-sm" [ngClass]="{'btn-secondary': categoriaSeleccionada !== 'Pizzas'}" (click)="setCategoria('Pizzas')">🍕 Pizzas</button>
+      <button class="btn btn-sm" [ngClass]="{'btn-secondary': categoriaSeleccionada !== 'Pastas'}" (click)="setCategoria('Pastas')">🍝 Pastas</button>
+      <button class="btn btn-sm" [ngClass]="{'btn-secondary': categoriaSeleccionada !== 'Postres'}" (click)="setCategoria('Postres')">🍰 Postres</button>
+      <button class="btn btn-sm" [ngClass]="{'btn-secondary': categoriaSeleccionada !== 'Bebidas'}" (click)="setCategoria('Bebidas')">🥤 Bebidas</button>
+    </div>
   </div>
 
-  <div *ngIf="cargando" class="text-center">
-    <p>Cargando menú delicioso...</p>
+  <div *ngIf="cargando" class="text-center" style="padding: 3rem 0;">
+    <p style="font-size: 1.1rem; color: var(--text-muted);">Cargando menú delicioso...</p>
   </div>
 
   <div *ngIf="error" class="alert alert-danger">
@@ -19,19 +31,21 @@
       <div *ngFor="let prod of productosFiltrados" class="product-card card">
         <div class="product-image-container">
           <span class="product-badge">Especialidad</span>
-          <div class="product-placeholder-img">🍳</div>
+          <div class="product-placeholder-img">{{ obtenerIconoProducto(prod.nombre) }}</div>
         </div>
         <div class="product-details">
           <h3>{{ prod.nombre }}</h3>
           <p class="product-desc">{{ prod.descripcion }}</p>
           <div class="product-footer">
             <span class="product-price">${{ prod.precio | number:'1.2-2' }}</span>
-            <button class="btn btn-sm" (click)="agregarAlCarrito(prod)">Ordenar</button>
+            <button class="btn btn-sm" (click)="agregarAlCarrito(prod)">+ Agregar</button>
           </div>
         </div>
       </div>
-      <div *ngIf="productosFiltrados.length === 0" class="text-center" style="grid-column: 1 / -1; padding: 2rem; color: var(--text-muted);">
-        No se encontraron platos que coincidan con "{{ busqueda }}".
+
+      <div *ngIf="productosFiltrados.length === 0" class="text-center card" style="grid-column: 1 / -1; padding: 3rem; color: var(--text-muted);">
+        <p style="font-size: 1.1rem;">No se encontraron platos que coincidan con la búsqueda.</p>
+        <button class="btn btn-sm btn-secondary" (click)="limpiarBusqueda(); setCategoria('Todos')" style="margin-top: 1rem;">Ver Todos los Platos</button>
       </div>
     </div>
 
@@ -47,7 +61,8 @@
       </div>
 
       <div *ngIf="carrito.length === 0" class="empty-cart-text">
-        <p>Tu carrito está vacío. ¡Elige tus platos favoritos!</p>
+        <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">🛒</span>
+        <p>Tu carrito está vacío. ¡Elige tus platos favoritos del menú!</p>
       </div>
 
       <div *ngIf="carrito.length > 0">
@@ -59,7 +74,7 @@
             </div>
             <div class="cart-item-actions" style="display: flex; align-items: center; gap: 0.4rem;">
               <button class="btn btn-sm" (click)="modificarCantidad(i, -1)" style="padding: 0.2rem 0.5rem;">-</button>
-              <span style="font-weight: bold; min-width: 1.2rem; text-align: center;">{{ item.cantidad }}</span>
+              <span style="font-weight: bold; min-width: 1.4rem; text-align: center;">{{ item.cantidad }}</span>
               <button class="btn btn-sm" (click)="modificarCantidad(i, 1)" style="padding: 0.2rem 0.5rem;">+</button>
               <button class="btn btn-sm btn-danger" (click)="eliminarDelCarrito(i)" style="margin-left: 0.25rem;">✕</button>
             </div>
@@ -67,23 +82,23 @@
         </div>
 
         <div class="cart-total">
-          <span>Total:</span>
+          <span>Total a Pagar:</span>
           <strong>${{ obtenerTotal() | number:'1.2-2' }}</strong>
         </div>
 
         <div class="cart-checkout-form" style="margin-top: 1.5rem;">
-          <div *ngIf="!clienteService.estaAutenticado()" class="text-center">
-            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Inicia sesión para finalizar tu pedido.</p>
+          <div *ngIf="!clienteService.estaAutenticado()" class="text-center card" style="background-color: var(--primary-light); border-color: var(--border-color); padding: 1.25rem;">
+            <p style="font-size: 0.9rem; color: var(--text-dark); margin-bottom: 0.75rem; font-weight: 500;">Inicia sesión con tu cuenta de cliente para finalizar el pedido.</p>
             <a routerLink="/login" class="btn btn-sm btn-block">Iniciar Sesión</a>
           </div>
 
           <div *ngIf="clienteService.estaAutenticado()">
             <div class="form-group">
               <label for="direccionEntrega">Dirección de Entrega</label>
-              <input type="text" id="direccionEntrega" name="direccionEntrega" [(ngModel)]="direccionEntrega" class="form-control" placeholder="Ej: Calle Principal 123" required>
+              <input type="text" id="direccionEntrega" name="direccionEntrega" [(ngModel)]="direccionEntrega" class="form-control" placeholder="Ej: Av. Central 456, Apto 3B" required>
             </div>
             <button class="btn btn-block" [disabled]="enviandoPedido" (click)="confirmarPedido()">
-              {{ enviandoPedido ? 'Procesando...' : 'Confirmar Pedido' }}
+              {{ enviandoPedido ? 'Procesando Pedido...' : '🚀 Confirmar y Enviar Pedido' }}
             </button>
           </div>
         </div>

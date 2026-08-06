@@ -35,6 +35,10 @@ export class ClienteService {
     );
   }
 
+  obtenerTodos(): Observable<Cliente[]> {
+    return this.http.get<Cliente[]>(this.apiUrl);
+  }
+
   logout(): void {
     localStorage.removeItem('usuario_sabor_express');
     this.usuarioActual.set(null);
